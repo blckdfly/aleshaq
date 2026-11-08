@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aleshaq-sdk"
+version = "0.1.0"
+description = "Aleshnatt Quantum SDK: Comprehensive toolkit for quantum primitives, error correction, networking, and protocols."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Naufal Ziyaadaturrahman"},
+]
+keywords = [
+    "quantum",
+    "qiskit",
+    "quantum-computing",
+    "quantum-information",
+    "quantum-error-correction",
+    "quantum-networking",
+    "quantum-cryptography",
+    "qkd",
+    "bb84",
+    "teleportation",
+    "qec",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Security :: Cryptography",
+]
+dependencies = [
+    "qiskit>=2.0",
+    "numpy",
+]
+
+[project.optional-dependencies]
+sim = ["qiskit-aer"]
+ibm = ["qiskit-ibm-runtime>=0.18.0"]
+qbraid = ["qbraid>=0.6.0"]
+all = [
+    "qiskit-aer",
+    "qiskit-ibm-runtime>=0.18.0",
+    "qbraid>=0.6.0",
+]
+dev = [
+    "qiskit-aer",
+    "pytest>=7.0",
+    "build",
+    "twine",
+]
+
+[project.urls]
+Homepage = "https://github.com/naufaziy/aleshaq"
+Repository = "https://github.com/naufaziy/aleshaq"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aleshaq"]

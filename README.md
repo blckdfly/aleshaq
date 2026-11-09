@@ -8,7 +8,7 @@
 
 ---
 
-## 📦 Architecture & Packages
+## Architecture & Packages
 
 `aleshaq` unites the full quantum information stack into four cohesive modules:
 
@@ -28,7 +28,7 @@
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ```bash
 # Base SDK installation:
@@ -47,7 +47,7 @@ pip install "aleshaq-sdk[all]"
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 ### 1. Quantum Primitives (`aleshaq.primitives`)
 
@@ -118,7 +118,7 @@ print(f"PNS Attack Detected: {decoy_res.pns_attack_detected}")
 
 ---
 
-## 🛠️ Development & Testing
+## Development & Testing
 
 ```bash
 # Clone the repository
@@ -134,6 +134,6 @@ pytest
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).

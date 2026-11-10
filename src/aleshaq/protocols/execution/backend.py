@@ -55,7 +55,7 @@ def get_ibm_backend(
     Credentials are read from arguments or the environment:
         Token: `token` parameter, or `QISKIT_IBM_TOKEN` / `IBM_QUANTUM_TOKEN` env vars.
         Instance: `instance` parameter, or `QISKIT_IBM_INSTANCE` / `IBM_QUANTUM_INSTANCE` env vars.
-        Channel: `channel` parameter, or `QISKIT_IBM_CHANNEL` (defaults to 'ibm_quantum').
+        Channel: `channel` parameter, or `QISKIT_IBM_CHANNEL` (auto-detected as 'ibm_cloud' if an instance CRN is provided).
 
     Args:
         backend_name: Specific backend name (e.g. "ibm_brisbane", "ibm_kyoto", "ibmq_qasm_simulator").
@@ -81,18 +81,21 @@ def get_ibm_backend(
         ) from exc
 
     api_token = token or os.environ.get("QISKIT_IBM_TOKEN") or os.environ.get("IBM_QUANTUM_TOKEN")
+    inst = instance or os.environ.get("QISKIT_IBM_INSTANCE") or os.environ.get("IBM_QUANTUM_INSTANCE")
+    chan = channel or os.environ.get("QISKIT_IBM_CHANNEL")
+    if not chan:
+        chan = "ibm_cloud" if (inst and inst.startswith("crn:")) else "ibm_quantum"
+
     if not api_token:
         # Check if an account is already saved on disk
         try:
-            service = QiskitRuntimeService(channel=channel or os.environ.get("QISKIT_IBM_CHANNEL", "ibm_quantum"))
+            service = QiskitRuntimeService(channel=chan, instance=inst)
         except Exception as exc:
             raise MissingCredentialsError(
                 "IBM Quantum credentials not found. Please provide an API token via the 'token' argument, "
                 "set the 'QISKIT_IBM_TOKEN' environment variable, or save your account with QiskitRuntimeService.save_account()."
             ) from exc
     else:
-        inst = instance or os.environ.get("QISKIT_IBM_INSTANCE") or os.environ.get("IBM_QUANTUM_INSTANCE")
-        chan = channel or os.environ.get("QISKIT_IBM_CHANNEL", "ibm_quantum")
         service = QiskitRuntimeService(channel=chan, token=api_token, instance=inst)
 
     if backend_name:

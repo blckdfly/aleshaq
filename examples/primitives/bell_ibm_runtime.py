@@ -44,12 +44,16 @@ def main() -> None:
     qc = bell_state(0)
     qc.measure_all()
 
-    # 2. Transpile and execute on hardware
+    # 2. Transpile and execute on hardware using Qiskit Runtime SamplerV2
+    from qiskit_ibm_runtime import SamplerV2 as Sampler
+
     print(f"\n--- Executing |Φ⁺⟩ Bell state circuit on {backend.name} ---")
     t_qc = transpile(qc, backend)
-    job = backend.run(t_qc, shots=4096)
+    sampler = Sampler(mode=backend)
+    job = sampler.run([t_qc], shots=4096)
     result = job.result()
-    counts = result.get_counts()
+    pub_result = result[0]
+    counts = pub_result.data.meas.get_counts()
 
     print("\n--- Measurement Counts ---")
     print(counts)

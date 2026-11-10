@@ -30,3 +30,6 @@ htmlcov/
 *.swo
 *~
 .DS_Store
+
+IBM_QUANTUM_TESTING.md
+test_ibm_quantum.py

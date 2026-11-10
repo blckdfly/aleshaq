@@ -31,7 +31,28 @@ def get_ibm_backend(
     least_busy: bool = False,
     min_qubits: int | None = None,
 ) -> Any:
-    """Obtain an IBM Quantum Runtime backend."""
+    """Obtain an IBM Quantum Runtime backend.
+
+    Credentials can be supplied via arguments or environment variables:
+        Token: `token` parameter, or `QISKIT_IBM_TOKEN` / `IBM_QUANTUM_TOKEN`.
+        Instance: `instance` parameter, or `QISKIT_IBM_INSTANCE` / `IBM_QUANTUM_INSTANCE`.
+        Channel: `channel` parameter, or `QISKIT_IBM_CHANNEL` (auto-detected as 'ibm_cloud' if an instance CRN is provided).
+
+    Args:
+        backend_name: Specific backend name (e.g., 'ibm_brisbane', 'ibm_marrakesh').
+        token: IBM Quantum API token or IBM Cloud IAM API key.
+        instance: IBM Quantum hub/group/project or IBM Cloud instance CRN.
+        channel: Service channel ('ibm_cloud' or 'ibm_quantum').
+        least_busy: If True and backend_name is None, select the least-busy operational backend.
+        min_qubits: Minimum number of physical qubits required when selecting least_busy.
+
+    Returns:
+        IBMBackend instance.
+
+    Raises:
+        MissingCredentialsError: If credentials cannot be located.
+        BackendExecutionError: If qiskit-ibm-runtime is missing or backend loading fails.
+    """
     try:
         from qiskit_ibm_runtime import QiskitRuntimeService  # type: ignore[import-untyped,import-not-found]
     except ImportError as exc:
@@ -41,16 +62,19 @@ def get_ibm_backend(
         ) from exc
 
     api_token = token or os.environ.get("QISKIT_IBM_TOKEN") or os.environ.get("IBM_QUANTUM_TOKEN")
+    inst = instance or os.environ.get("QISKIT_IBM_INSTANCE") or os.environ.get("IBM_QUANTUM_INSTANCE")
+    chan = channel or os.environ.get("QISKIT_IBM_CHANNEL")
+    if not chan:
+        chan = "ibm_cloud" if (inst and inst.startswith("crn:")) else "ibm_quantum"
+
     if not api_token:
         try:
-            service = QiskitRuntimeService(channel=channel or os.environ.get("QISKIT_IBM_CHANNEL", "ibm_quantum"))
+            service = QiskitRuntimeService(channel=chan, instance=inst)
         except Exception as exc:
             raise MissingCredentialsError(
                 "IBM Quantum credentials not found. Please set the 'QISKIT_IBM_TOKEN' environment variable."
             ) from exc
     else:
-        inst = instance or os.environ.get("QISKIT_IBM_INSTANCE") or os.environ.get("IBM_QUANTUM_INSTANCE")
-        chan = channel or os.environ.get("QISKIT_IBM_CHANNEL", "ibm_quantum")
         service = QiskitRuntimeService(channel=chan, token=api_token, instance=inst)
 
     if backend_name:

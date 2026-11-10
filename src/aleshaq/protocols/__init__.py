@@ -38,7 +38,7 @@ from aleshaq.protocols.execution import (
     get_qbraid_backend,
 )
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     # Communication

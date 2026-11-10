@@ -22,7 +22,7 @@ from aleshaq.networking.nodes import Node
 from aleshaq.networking.protocols import DistributionResult, EntanglementDistribution
 from aleshaq.networking.routing import ShortestPathRouter, Topology
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     # Top-level

@@ -9,7 +9,7 @@ Comprehensive Python SDK for quantum information science:
 
 from aleshaq import networking, primitives, protocols, qec
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "Naufal Ziyaadaturrahman"
 
 __all__ = [
